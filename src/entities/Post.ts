@@ -1,9 +1,10 @@
-import {BeforeInsert, Column, Entity as TOENtity, Index, JoinColumn, ManyToOne} from "typeorm";
+import {BeforeInsert, Column, Entity as TOENtity, Index, JoinColumn, ManyToOne, OneToMany} from "typeorm";
 import { makeId, slugify } from "../util/helpers";
 
 import Entity from './Entity'
 import Sub from "./Sub";
 import User from "./User";
+import Comment from "./Comment";
 
 @TOENtity('posts')
 export default class Post extends Entity {
@@ -37,8 +38,11 @@ export default class Post extends Entity {
     @JoinColumn({ name: 'subName', referencedColumnName: 'name' })
     sub: Sub
 
+    @OneToMany(() => Comment, (comment) => comment.post)
+    comments: Comment[]
+
     @BeforeInsert()
-    madeIdAndSlug() {
+    makeIdAndSlug() {
         this.identifier = makeId(7)
         this.slug = slugify(this.title)
     }
