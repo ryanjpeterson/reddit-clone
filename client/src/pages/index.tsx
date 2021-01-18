@@ -1,25 +1,29 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { Fragment } from 'react';
 import Head from 'next/head';
+import useSWR from 'swr';
 
 import { Post } from '../types';
-// import { GetServerSideProps } from 'next';
 
 import PostCard from '../components/PostCard';
 
+// import { GetServerSideProps } from 'next';
+
 export default function Home() {
   // Client side rendering of posts
-  const [posts, setPosts] = useState<Post[]>([]);
+  // const [posts, setPosts] = useState<Post[]>([]);
 
-  useEffect(() => {
-    axios
-      .get('/posts')
-      .then((res) => setPosts(res.data))
-      .catch((err) => console.log(err));
-  }, []);
+  // Axios has been replaced with useSWR call
+  // useEffect(() => {
+  //   axios
+  //     .get('/posts')
+  //     .then((res) => setPosts(res.data))
+  //     .catch((err) => console.log(err));
+  // }, []);
+
+  const { data: posts } = useSWR('/posts');
 
   return (
-    <div className="pt-12">
+    <Fragment>
       <Head>
         <title>readit: the front page of the internet</title>
       </Head>
@@ -27,14 +31,14 @@ export default function Home() {
       <div className="container flex pt-4">
         {/* Posts feed */}
         <div className="w-160">
-          {posts.map((post) => (
+          {posts?.map((post) => (
             <PostCard post={post} key={post.identifier} />
           ))}
         </div>
 
         {/* Sidebar */}
       </div>
-    </div>
+    </Fragment>
   );
 }
 
