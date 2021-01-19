@@ -6,6 +6,8 @@ import Vote from '../entities/Vote';
 
 import user from '../middleware/user';
 import auth from '../middleware/auth';
+import { getConnection } from 'typeorm';
+import Sub from '../entities/Sub';
 
 const vote = async (req: Request, res: Response) => {
   const { identifier, slug, commentIdentifier, value } = req.body;
@@ -63,7 +65,30 @@ const vote = async (req: Request, res: Response) => {
   }
 };
 
+const topSubs = async (_: Request, res: Response) => {
+  try {
+    const imageUrlExp = `COALESCE('${process.env.APP_URL}/images/' || s."imageUrn" , 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y')`;
+    const subs = await getConnection()
+      .createQueryBuilder()
+      .select(
+        `s.title, s.name, ${imageUrlExp} as "imageUrl", count(p.id) as "postCount"`
+      )
+      .from(Sub, 's')
+      .leftJoin(Post, 'p', `s.name = p."subName"`)
+      .groupBy('s.title, s.name, "imageUrl"')
+      .orderBy(`"postCount"`, 'DESC')
+      .limit(5)
+      .execute();
+
+    return res.json(subs);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: 'Something went wrong' });
+  }
+};
+
 const router = Router();
 router.post('/vote', user, auth, vote);
+router.get('/top-subs', topSubs);
 
 export default router;
