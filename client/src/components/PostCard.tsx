@@ -1,25 +1,17 @@
+import axios from 'axios';
 import Link from 'next/link';
-import { Fragment } from 'react';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import classNames from 'classnames';
 
 import { Post } from '../types';
-import axios from 'axios';
+import ActionButton from './ActionButton';
 
 dayjs.extend(relativeTime);
 
 interface PostCardProps {
   post: Post;
 }
-
-const ActionButton = ({ children }) => {
-  return (
-    <div className="px-1 py-1 mr-1 text-xs text-gray-400 rounded cursor-pointer hover:bg-gray-200">
-      {children}
-    </div>
-  );
-};
 
 export default function PostCard({
   post: {
@@ -36,7 +28,7 @@ export default function PostCard({
     username,
   },
 }: PostCardProps) {
-  const vote = async (value) => {
+  const vote = async (value: number) => {
     try {
       const res = await axios.post('/misc/vote', {
         identifier,
@@ -49,6 +41,7 @@ export default function PostCard({
       console.log(err);
     }
   };
+
   return (
     <div key={identifier} className="flex mb-4 bg-white rounded">
       {/* Vote section */}
@@ -117,7 +110,9 @@ export default function PostCard({
             <a>
               <ActionButton>
                 <i className="mr-1 fas fa-comment-alt fa-xs"></i>
-                <span className="font-bold">{commentCount} comments</span>
+                <span className="font-bold">
+                  {commentCount} {commentCount === 1 ? ' comment' : ' comments'}
+                </span>
               </ActionButton>
             </a>
           </Link>
@@ -129,7 +124,7 @@ export default function PostCard({
 
           <ActionButton>
             <i className="mr-1 fas fa-bookmark fa-xs"></i>
-            <span className="font-bold">Share</span>
+            <span className="font-bold">Save</span>
           </ActionButton>
         </div>
       </div>
