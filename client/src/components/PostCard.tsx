@@ -87,7 +87,7 @@ export default function PostCard({
             </a>
           </Link>
           <p className="text-xs text-gray-600">
-            <span className="mx-1">&#8226;</span>
+            <span className="mx-1">•</span>
             Posted by{' '}
             <Link href={`/u/${username}`}>
               <a className="mx-1 hover:underline">/u/{username}</a>
