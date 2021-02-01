@@ -1,18 +1,18 @@
 export interface Post {
   identifier: string;
   title: string;
-  slug: string;
   body?: string;
+  slug: string;
   subName: string;
+  username: string;
   createdAt: string;
   updatedAt: string;
-  username: string;
+  sub?: Sub;
   // Virtual fields
   url: string;
   voteScore?: number;
   commentCount?: number;
   userVote?: number;
-  sub?: Sub;
 }
 
 export interface User {
@@ -44,6 +44,7 @@ export interface Comment {
   username: string;
   createdAt: string;
   updatedAt: string;
+  post?: Post;
   // Virtuals
   userVote: number;
   voteScore: number;
