@@ -43,7 +43,7 @@ export default function user() {
                         {comment.username}
 
                         <span> commented on </span>
-                        <Link href={comment.post.url}>
+                        <Link href={comment.post.url ? comment.post.url : '/'}>
                           <a className="font-semibold cursor-pointer hover:underline">
                             {comment.post.title}
                           </a>
